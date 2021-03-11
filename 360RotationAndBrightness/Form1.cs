@@ -12,6 +12,7 @@ namespace _360RotationAndBrightness
         public Form1()
         {
             InitializeComponent();
+            button2.Enabled = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -24,6 +25,7 @@ namespace _360RotationAndBrightness
                     img = new Bitmap(ofd.FileName);
                 }
             }
+            button2.Enabled = true;
 
         }
 
