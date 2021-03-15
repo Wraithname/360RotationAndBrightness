@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,23 @@ namespace _360RotationAndBrightness
         }
         public void Processing()
         {
-
+            int[,] counter = GetCountorPoints(new Bitmap(img));
+            Image[] imgarray = new Image[7];
+            int k = 0;
+            for (float x = -0.3f; x <= 0.3f; x += 0.1f)
+            {
+                imgarray[k] = brightnes.MakeGrayscale3(new Bitmap(img), x);
+                k++;
+            }
+            double[] center = new double[2];
+            float h = -0.3f;
+            foreach (Image bitmp in imgarray)
+            {
+                center[0] = bitmp.Width / 2;
+                center[1] = bitmp.Height / 2;
+                for (int i = 0; i <= 360; i++)
+                    WriteToPngFile(rotation.RotateImage(bitmp, i, center),h.ToString(),i.ToString());
+            }
         }
 
         private int[,] GetCountorPoints(Bitmap img)
@@ -75,6 +92,13 @@ namespace _360RotationAndBrightness
                 y1++;
             }
             return resmat;
+        }
+
+        void WriteToPngFile(Image image,string numbr,string nameangel)
+        {
+            if (!Directory.Exists(path + @"\Brightnes" + numbr))
+                Directory.CreateDirectory(path + @"\Brightnes" + numbr);
+            image.Save(path + @"\Brightnes" + numbr + @"\" + nameangel + @".png");
         }
     }
 }

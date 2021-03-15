@@ -18,7 +18,7 @@ namespace _360RotationAndBrightness
             Bitmap lNewBitmap = new Bitmap(pImage.Width, pImage.Height);
             lNewBitmap.SetResolution(pImage.HorizontalResolution, pImage.VerticalResolution);
             Graphics lGraphics = Graphics.FromImage(lNewBitmap);
-            lGraphics.Clear(Color.White);
+            lGraphics.Clear(Color.Transparent);
             lGraphics.Transform = lMatrix;
             lGraphics.DrawImage(pImage, 0, 0);
             lGraphics.Dispose();
