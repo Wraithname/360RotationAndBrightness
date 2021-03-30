@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace _360RotationAndBrightness
@@ -15,7 +16,7 @@ namespace _360RotationAndBrightness
         Brightnes brightnes = new Brightnes();
         Rotation rotation = new Rotation();
 
-        public Engine(Image im,string pt)
+        public Engine(Image im, string pt)
         {
             img = im;
             path = pt;
@@ -30,17 +31,38 @@ namespace _360RotationAndBrightness
                 imgarray[k] = brightnes.MakeGrayscale3(new Bitmap(img), x);
                 k++;
             }
-            double[] center = new double[2];
-            float h = -0.3f;
-            foreach (Image bitmp in imgarray)
-            {
-                center[0] = bitmp.Width / 2;
-                center[1] = bitmp.Height / 2;
-                for (int i = 0; i <= 360; i++)
-                    WriteToPngFile(rotation.RotateImage(bitmp, i, center),h.ToString(),i.ToString());
-            }
+            Thread[] tr = new Thread[2];
+            tr[0] = new Thread(x => ProcPng(imgarray[0], -0.3f));
+            tr[1] = new Thread(x => ProcPng(imgarray[1], -0.2f));
+            foreach (var t in tr)
+                t.Start();
+            foreach (var t in tr)
+                t.Join();
+            tr = new Thread[2];
+            tr[0] = new Thread(x => ProcPng(imgarray[2], -0.1f));
+            tr[1] = new Thread(x => ProcPng(imgarray[3], 0f));
+            foreach (var t in tr)
+                t.Start();
+            foreach (var t in tr)
+                t.Join();
+            tr = new Thread[3];
+            tr[0] = new Thread(x => ProcPng(imgarray[4], 0.1f));
+            tr[1] = new Thread(x => ProcPng(imgarray[5], 0.2f));
+            tr[2] = new Thread(x => ProcPng(imgarray[6], 0.3f));
+            foreach (var t in tr)
+                t.Start();
+            foreach (var t in tr)
+                t.Join();
         }
-
+        private void ProcPng(Image img, float k)
+        {
+            Bitmap bitmp = new Bitmap(img);
+            double[] center = new double[2];
+            center[0] = bitmp.Width / 2;
+            center[1] = bitmp.Height / 2;
+            for (int i = 0; i <= 360; i++)
+                WriteToPngFile(rotation.RotateImage(bitmp, i, center), k.ToString(), i.ToString());
+        }
         private int[,] GetCountorPoints(Bitmap img)
         {
             int colorBackr = img.GetPixel(0, 0).R;
@@ -94,7 +116,7 @@ namespace _360RotationAndBrightness
             return resmat;
         }
 
-        void WriteToPngFile(Image image,string numbr,string nameangel)
+        void WriteToPngFile(Image image, string numbr, string nameangel)
         {
             if (!Directory.Exists(path + @"\Brightnes" + numbr))
                 Directory.CreateDirectory(path + @"\Brightnes" + numbr);

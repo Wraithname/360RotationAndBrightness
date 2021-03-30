@@ -36,6 +36,8 @@ namespace _360RotationAndBrightness
                 if(fbd.ShowDialog()==DialogResult.OK)
                 {
                     path = fbd.SelectedPath;
+                    Engine eng = new Engine(img, path);
+                    eng.Processing();
                 }
             }
         }
