@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace _360RotationAndBrightness
 {
@@ -60,7 +56,7 @@ namespace _360RotationAndBrightness
             double[] center = new double[2];
             center[0] = bitmp.Width / 2;
             center[1] = bitmp.Height / 2;
-            for (int i = 0; i <= 360; i++)
+            for (int i = 0; i < 360; i++)
                 WriteToPngFile(rotation.RotateImage(bitmp, i, center), k.ToString(), i.ToString());
         }
         private int[,] GetCountorPoints(Bitmap img)
